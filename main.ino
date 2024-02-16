@@ -23,6 +23,7 @@ void setup()
   Serial.printf("Connecting to %s ", ssid);
   WiFi.begin(ssid, password);
   while (WiFi.status() != WL_CONNECTED) {
+    Wif
       delay(500);
       Serial.print(".");
   }
@@ -77,6 +78,7 @@ void water_loop() {
   if(!checkWater()) return;
   need = true;
   if (millis() - water_lasttime > WATER_MTBS) bot.sendMessage(id, "water pls\n", "Markdown");
+  water_lasttime = millis();
 }
 
 void telegram_loop() {
@@ -115,15 +117,6 @@ void handleNewMessages(int numNewMessages) {
             message += "\n\n";
             message += "/watered : tell the bot you watered the cactuses today\n";
             bot.sendMessage(chat_id, message, "Markdown");
-        }
-        else if (text == "/debug") {
-            message = "Debug started\n";
-            if(!getLocalTime(&lastWater)) message = "There has been a problem.\n";
-            lastWater.tm_mday--;
-            lastWater.tm_mday--;
-            lastWater.tm_mday--;
-            bot.sendMessage(chat_id, message, "Markdown");
-
         }
         else {
             message = "Not an acceptable command, please use /watered\n";
